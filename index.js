@@ -58,8 +58,17 @@ const resolvers = {
       return game;
     },
     deleteGame(_, args) {
-      db.games = db.games.filter((g) => g.id !== args.id);
+      db.games = db.games.filter((each) => each.id !== each.id);
       return db.games;
+    },
+    updateGame(_, args) {
+      db.games = db.games.map((each) => {
+        if (each.id === args.id) {
+          return { ...each, ...args.game };
+        }
+        return each;
+      });
+      return db.games.find((each) => each.id === args.id);
     },
   },
 };
@@ -79,10 +88,19 @@ console.log(`Server ready at: ${url}`);
 {
   // ExampleQuery all
   // query ExampleQuery {
-  //   games{
+  //   games {
+  //     id,
   //     title,
-  //     platform
+  //     platform,
+  //     reviews {
+  //       id,
+  //       rating,
+  //       author {
+  //         name
+  //       },
+  //     }
   //   }
+  // }
   //   authors {
   //     name,
   //     verified,
@@ -165,6 +183,25 @@ console.log(`Server ready at: ${url}`);
   //   "game": {
   //     "title": "title name",
   //     "platform": ["X-BOW", "Unity"]
+  //   }
+  // }
+}
+
+{
+  // UpdateGameMutation
+  // mutation UpdateGameMutation($id: ID!, $game: UpdateGameInput! ){
+  //   updateGame(id: $id, game: $game) {
+  //     id,
+  //     title,
+  //     platform
+  //   }
+  // }
+  // //inside Variable
+  // {
+  //   "id": "3",
+  //   "game": {
+  //     "title": "title namexx",
+  //     "platform": ["X-BOWxx", "Unityxx"]
   //   }
   // }
 }
