@@ -47,6 +47,21 @@ const resolvers = {
       return db.authors.find((each) => each.id === parent.author_id);
     },
   },
+  Mutation: {
+    addGame(_, args) {
+      let game = {
+        ...args.game,
+        id: Math.floor(Math.random() * 10000).toString(),
+      };
+      db.games.push(game);
+
+      return game;
+    },
+    deleteGame(_, args) {
+      db.games = db.games.filter((g) => g.id !== args.id);
+      return db.games;
+    },
+  },
 };
 
 // server setup
@@ -60,3 +75,96 @@ const { url } = await startStandaloneServer(server, {
 });
 
 console.log(`Server ready at: ${url}`);
+
+{
+  // ExampleQuery all
+  // query ExampleQuery {
+  //   games{
+  //     title,
+  //     platform
+  //   }
+  //   authors {
+  //     name,
+  //     verified,
+  //     id
+  //   }
+  //   reviews {
+  //     id
+  //   }
+  // }
+}
+{
+  // ExampleQuery by id
+  // query ExampleQuery($id: ID!) {
+  //   game(id: $id) {
+  //     id,
+  //     title,
+  //     platform,
+  //     reviews {
+  //       id,
+  //       rating,
+  //       content
+  //     }
+  //   }
+  //   author(id: $id) {
+  //     id,
+  //     name,
+  //     reviews {
+  //       id,
+  //       rating,
+  //       content
+  //       rating
+  //     }
+  //   }
+  //   review(id: $id) {
+  //     id,
+  //     rating,
+  //     content,
+  //     game {
+  //       id,
+  //       platform,
+  //       title
+  //     },
+  //     author {
+  //       id,
+  //       name,
+  //       verified
+  //     }
+  //   }
+  // }
+  // //inside Variable
+  // {
+  //   "id": "3"
+  // }
+}
+{
+  //DeleteGameMutation
+  // mutation DeleteGameMutation($id: ID!){
+  //   deleteGame(id: $id){
+  //     id,
+  //     title,
+  //     platform,
+  //   }
+  // }
+  // //inside Variable
+  // {
+  //   "id": "3"
+  // }
+}
+{
+  // AddGameMutation
+  // mutation AddGameMutation($game: AddGameInput!){
+  //   addGame(game: $game) {
+  //     id,
+  //     title,
+  //     platform
+  //   }
+  // }
+  // //inside Variable
+  // {
+  //   "game": {
+  //     "title": "title name",
+  //     "platform": ["X-BOW", "Unity"]
+  //   }
+  // }
+}
